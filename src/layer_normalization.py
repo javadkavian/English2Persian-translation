@@ -14,19 +14,19 @@ class LayerNormalization(nn.Module):
 
 
     def forward(self, x):
-        print("--testing inside the class--")
+        # print("--testing inside the class--")
         dimensions = [-(i+1) for i in range(len(self.parametes_shape))] 
-        print(f'dimensions : {dimensions}')
+        # print(f'dimensions : {dimensions}')
         mean = x.mean(dim = dimensions, keepdim=True)
-        print(f'shape of mean : {mean.shape}')
+        # print(f'shape of mean : {mean.shape}')
         var = ((x - mean)**2).mean(dim=dimensions, keepdim=True)
-        print(f'shape of variance : {var.shape}')
+        # print(f'shape of variance : {var.shape}')
         std = (var + 1e-5).sqrt()
-        print(f'shape of std : {std.shape}')
+        # print(f'shape of std : {std.shape}')
         y = (x - mean) / std
-        print(f'shape of y : {y.shape}')
+        # print(f'shape of y : {y.shape}')
         out = self.gamma * y + self.beta
-        print(f'shape of output : {out.shape}')
+        # print(f'shape of output : {out.shape}')
         return out
 
 
