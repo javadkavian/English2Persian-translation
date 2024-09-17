@@ -3,3 +3,4 @@
 /Scripts/
 /share/
 *.cfg
+/src/__pycache__/
