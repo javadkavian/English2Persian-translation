@@ -33,19 +33,19 @@ class MultiHeadAttention(nn.Module):
     def forward(self, x, mask=None):
         batch_size, sequence_len, _ = x.shape
         qkv = self.qkv_generator(x)
-        print(f'shape of qkv : {qkv.shape}')
+        # print(f'shape of qkv : {qkv.shape}')
         qkv = qkv.reshape(batch_size, self.n_heads, sequence_len, 3*self.head_dim)
-        print(f'shape of qkv after reshaping: {qkv.shape}')
+        # print(f'shape of qkv after reshaping: {qkv.shape}')
         q, k, v = qkv.chunk(3, dim=-1)
-        print(f'shape of q : {q.shape}')
-        print(f'shape of k : {k.shape}')
-        print(f'shape of v : {v.shape}')
+        # print(f'shape of q : {q.shape}')
+        # print(f'shape of k : {k.shape}')
+        # print(f'shape of v : {v.shape}')
         values = apply_attention(q, k, v, mask)
-        print(f'values after attention : {values.shape}')
+        # print(f'values after attention : {values.shape}')
         values = values.reshape(batch_size, sequence_len, self.n_heads * self.head_dim)    
-        print(f'values after reshaping : {values.shape}')
+        # print(f'values after reshaping : {values.shape}')
         out = self.final_linear(values)
-        print(f'shape of final output : {out.shape}')
+        # print(f'shape of final output : {out.shape}')
         return out
 
 
@@ -71,7 +71,7 @@ if __name__ == "__main__":
     batch_size = 30
     sequence_length = 5
     x = torch.randn( (batch_size, sequence_length, input_dim) )
-    print(f'input shape: {x.shape}')
+    # print(f'input shape: {x.shape}')
     model = MultiHeadAttention(input_dim, d_model, num_heads)
     out = model.forward(x)
 
