@@ -21,7 +21,7 @@ def apply_attention(query, key, value, mask=None):
 
 
 class MultiHeadAttention(nn.Module):
-    def __init__(self, model_dim, n_heads):
+    def __init__(self, input_dim, model_dim, n_heads):
         super(MultiHeadAttention, self).__init__()
         self.model_dim = model_dim
         self.n_heads = n_heads
@@ -30,6 +30,7 @@ class MultiHeadAttention(nn.Module):
         self.final_linear = nn.Linear(model_dim, model_dim)
 
     def forward(self, x, mask=None):
+        # print("--testing inside the model--")
         batch_size, sequence_len, _ = x.shape
         qkv = self.qkv_generator(x)
         # print(f'shape of qkv : {qkv.shape}')
@@ -63,14 +64,14 @@ if __name__ == "__main__":
     values = values.reshape(1, 4, 8*64)
     print(values.shape)
     print("--testing multihead attention class--")
-    input_dim = 1024
-    d_model = 512
+    input_dim = 20
+    d_model = 64
     num_heads = 8
 
-    batch_size = 30
+    batch_size = 3
     sequence_length = 5
     x = torch.randn( (batch_size, sequence_length, input_dim) )
     # print(f'input shape: {x.shape}')
-    model = MultiHeadAttention(d_model, num_heads)
+    model = MultiHeadAttention(x.shape[-1], d_model, num_heads)
     out = model.forward(x)
 
