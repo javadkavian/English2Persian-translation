@@ -21,9 +21,8 @@ def apply_attention(query, key, value, mask=None):
 
 
 class MultiHeadAttention(nn.Module):
-    def __init__(self, input_dim, model_dim, n_heads):
+    def __init__(self, model_dim, n_heads):
         super(MultiHeadAttention, self).__init__()
-        self.input_dimmension = input_dim
         self.model_dim = model_dim
         self.n_heads = n_heads
         self.head_dim = model_dim // n_heads
@@ -72,6 +71,6 @@ if __name__ == "__main__":
     sequence_length = 5
     x = torch.randn( (batch_size, sequence_length, input_dim) )
     # print(f'input shape: {x.shape}')
-    model = MultiHeadAttention(input_dim, d_model, num_heads)
+    model = MultiHeadAttention(d_model, num_heads)
     out = model.forward(x)
 
