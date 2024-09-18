@@ -22,18 +22,29 @@ class DecoderLayer(nn.Module):
         self.dropout3 = nn.Dropout(p=drop_out_prob)
 
     def forward(self, x, y, decoder_mask):
+        print("--testing inside the model--")
+        print(f'shape of y : {y.shape} and shape of x : {x.shape}')
         residual_path = y
         y = self.self_attention(y, mask=decoder_mask)
+        print(f'y after attention : {y.shape}')
         y = self.dropout1(y)
+        print(f'y after dropout : {y.shape}')
         y = self.norm1(y + residual_path)
+        print(f'y after add and norm : {y.shape}')
         residual_path = y
         y = self.cross_attention(x, y, mask=None)
+        print(f'y after cross attention : {y.shape}')
         y = self.dropout2(y)
+        print(f'y after dropout : {y.shape}')
         y = self.norm2(y + residual_path)
+        print(f'y after add and norm : {y.shape}')
         residual_path = y
         y = self.fc(y)
+        print(f'y after fully connected layer : {y.shape}')
         y = self.dropout3(y)
+        print(f'y after dropout : {y.shape}')
         y = self.norm3(y + residual_path)
+        print(f'y after add and norm : {y.shape}')
         return y 
 
 
