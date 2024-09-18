@@ -6,3 +6,4 @@
 /src/__pycache__/
 /whl_files/
 /dataset/
+models/bert/model.safetensors
