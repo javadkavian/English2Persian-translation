@@ -18,14 +18,22 @@ class EncoderLayer(nn.Module):#input_dim and model dim should be equal.test the 
         self.dropout2 = nn.Dropout(p=drop_out_prob)
 
     def forward(self, x):
+        print("--testing inside the model--")
         residual_path = x
+        print(f'input shape : {x.shape}')
         x = self.attention(x)
+        print(f'shape of x after attention : {x.shape}')
         x = self.dropout1(x)
+        print(f'shape of x after dropout layer : {x.shape}')
         x = self.norm1(x + residual_path)
+        print(f'shape of x after add and norm : {x.shape}')
         residual_path = x 
         x = self.fc(x)
+        print(f'shape of x after fully connected layer : {x.shape}')
         x = self.dropout2(x)
+        print(f'shape of x after drop out layer : {x.shape}')
         x = self.norm2(x + residual_path)
+        print(f'shape of x after final add and norm : {x.shape}')
         return x
 
 
