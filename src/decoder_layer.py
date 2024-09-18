@@ -58,7 +58,7 @@ if __name__ == "__main__":
     max_sequence_length = 200
     hidden_fc = 50
 
-    x = torch.randn( (batch_size, max_sequence_length, d_model) ) # English sentence positional encoded 
+    x = torch.randn( (batch_size, max_sequence_length, d_model) ) 
     y = torch.randn( (batch_size, max_sequence_length, d_model) )
 
     mask = torch.full([max_sequence_length, max_sequence_length] , float('-inf'))
