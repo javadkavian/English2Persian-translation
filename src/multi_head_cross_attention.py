@@ -17,15 +17,22 @@ class MultiHeadCrossAttention(nn.Module):
 
 
     def forward(self, x, y, mask=None):
+        print(f'--testing inside the model--')
         batch_size, sequence_len, _ = x.shape
+        print(f'batch_size : {batch_size} and sequence len : {sequence_len}' )
         kv = self.kv_generator(x)
         kv = kv.reshape(batch_size, sequence_len, self.n_heads, 2*self.head_dim).permute(0, 2, 1, 3)
         k, v = kv.chunk(2, dim=-1)
+        print(f'shape of k : {k.shape} and shape of v : {v.shape}')
         q = self.q_generator(y)
         q = q.reshape(batch_size, sequence_len, self.n_heads, self.head_dim).permute(0, 2, 1, 3)
+        print(f'shape of v : {v.shape}')
         values = apply_attention(q, k, v, mask)
+        print(f'values after attention : {v.shape}')
         values = values.reshape(batch_size, sequence_len, self.model_dim)
+        print(f'values after reshaping : {v.shape}')
         out = self.fc(values)
+        print(f'shape of output : {out.shape}')
         return out
     
 
