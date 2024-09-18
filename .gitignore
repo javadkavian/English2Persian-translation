@@ -4,3 +4,5 @@
 /share/
 *.cfg
 /src/__pycache__/
+/whl_files/
+/dataset/
