@@ -2,7 +2,7 @@ from datasets import load_from_disk
 import numpy as np
 import pandas as pd
 
-NUMBER_OF_SAMPLES = 10000
+NUMBER_OF_SAMPLES = 200000
 
 if __name__ == "__main__":
     dataset = load_from_disk('././dataset/')
