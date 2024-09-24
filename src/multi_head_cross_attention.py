@@ -29,7 +29,7 @@ class MultiHeadCrossAttention(nn.Module):
         # print(f'shape of v : {v.shape}')
         values = apply_attention(q, k, v, mask)
         # print(f'values after attention : {v.shape}')
-        values = values.reshape(batch_size, sequence_len, self.model_dim)
+        values = values.permute(0, 2, 1, 3).reshape(batch_size, sequence_len, self.model_dim)
         # print(f'values after reshaping : {v.shape}')
         out = self.fc(values)
         # print(f'shape of output : {out.shape}')
