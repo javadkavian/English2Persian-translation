@@ -12,7 +12,7 @@ def apply_attention(query, key, value, mask=None):
         # scaled += mask
         scaled = scaled.permute(1, 0, 2, 3) + mask
         scaled = scaled.permute(1, 0, 2, 3)
-        
+
 
     attention = F.softmax(scaled, dim=-1)
     values = torch.matmul(attention, value)
@@ -38,6 +38,7 @@ class MultiHeadAttention(nn.Module):
         qkv = self.qkv_generator(x)
         # print(f'shape of qkv : {qkv.shape}')
         qkv = qkv.reshape(batch_size, self.n_heads, sequence_len, 3*self.head_dim)
+        qkv = qkv.permute(0, 2, 1, 3)
         # print(f'shape of qkv after reshaping: {qkv.shape}')
         q, k, v = qkv.chunk(3, dim=-1)
         # print(f'shape of q : {q.shape}')
@@ -45,7 +46,7 @@ class MultiHeadAttention(nn.Module):
         # print(f'shape of v : {v.shape}')
         values = apply_attention(q, k, v, mask)
         # print(f'values after attention : {values.shape}')
-        values = values.reshape(batch_size, sequence_len, self.n_heads * self.head_dim)    
+        values = values.permute(0, 2, 1, 3).reshape(batch_size, sequence_len, self.n_heads * self.head_dim)    
         # print(f'values after reshaping : {values.shape}')
         out = self.final_linear(values)
         # print(f'shape of final output : {out.shape}')
