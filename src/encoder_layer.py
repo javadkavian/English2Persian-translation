@@ -7,7 +7,7 @@ from encoder_feed_forward import EncoderFeedForward
 
 
 class EncoderLayer(nn.Module):#input_dim and model dim should be equal.test the case where they are not with nn.Linear
-    #also model dim should be coefficient of number of heads
+    #also model dim should be coefficient of number of attention heads
     def __init__(self, input_shape, model_dim, hidden_fc, n_heads = 8, drop_out_prob = 0.1):
         super(EncoderLayer, self).__init__()
         self.attention = MultiHeadAttention(input_dim= input_shape[-1], model_dim=model_dim, n_heads=n_heads)
@@ -19,7 +19,7 @@ class EncoderLayer(nn.Module):#input_dim and model dim should be equal.test the 
 
     def forward(self, x):
         # print("--testing inside the model--")
-        residual_path = x
+        residual_path = x.clone()
         # print(f'input shape : {x.shape}')
         x = self.attention(x)
         # print(f'shape of x after attention : {x.shape}')
@@ -27,7 +27,7 @@ class EncoderLayer(nn.Module):#input_dim and model dim should be equal.test the 
         # print(f'shape of x after dropout layer : {x.shape}')
         x = self.norm1(x + residual_path)
         # print(f'shape of x after add and norm : {x.shape}')
-        residual_path = x 
+        residual_path = x.clone()
         x = self.fc(x)
         # print(f'shape of x after fully connected layer : {x.shape}')
         x = self.dropout2(x)
