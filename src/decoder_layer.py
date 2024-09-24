@@ -21,24 +21,24 @@ class DecoderLayer(nn.Module):
         self.norm3 = LayerNormalization(input_shape)
         self.dropout3 = nn.Dropout(p=drop_out_prob)
 
-    def forward(self, x, y, decoder_mask):
+    def forward(self, x, y, self_attention_mask, cross_attention_mask):
         # print("--testing inside the model--")
         # print(f'shape of y : {y.shape} and shape of x : {x.shape}')
-        residual_path = y
-        y = self.self_attention(y, mask=decoder_mask)
+        residual_path = y.clone()
+        y = self.self_attention(y, mask=self_attention_mask)
         # print(f'y after attention : {y.shape}')
         y = self.dropout1(y)
         # print(f'y after dropout : {y.shape}')
         y = self.norm1(y + residual_path)
         # print(f'y after add and norm : {y.shape}')
-        residual_path = y
-        y = self.cross_attention(x, y, mask=None)
+        residual_path = y.clone()
+        y = self.cross_attention(x, y, mask=cross_attention_mask)
         # print(f'y after cross attention : {y.shape}')
         y = self.dropout2(y)
         # print(f'y after dropout : {y.shape}')
         y = self.norm2(y + residual_path)
         # print(f'y after add and norm : {y.shape}')
-        residual_path = y
+        residual_path = y.clone()
         y = self.fc(y)
         # print(f'y after fully connected layer : {y.shape}')
         y = self.dropout3(y)
@@ -61,8 +61,7 @@ if __name__ == "__main__":
     x = torch.randn( (batch_size, max_sequence_length, d_model) ) 
     y = torch.randn( (batch_size, max_sequence_length, d_model) )
 
-    mask = torch.full([max_sequence_length, max_sequence_length] , float('-inf'))
-    mask = torch.triu(mask, diagonal=1)
+
     decoder = DecoderLayer(y.shape, d_model, hidden_fc, num_heads, drop_prob)
-    out = decoder(x, y, mask)
+    out = decoder(x, y, None, None)
     print(out.shape)
