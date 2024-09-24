@@ -9,7 +9,10 @@ def apply_attention(query, key, value, mask=None):
     key_dimmension = query.shape[-1]
     scaled = torch.matmul(query, key.transpose(-2, -1)) / np.sqrt(key_dimmension)
     if mask is not None:
-        scaled += mask
+        # scaled += mask
+        scaled = scaled.permute(1, 0, 2, 3) + mask
+        scaled = scaled.permute(1, 0, 2, 3)
+        
 
     attention = F.softmax(scaled, dim=-1)
     values = torch.matmul(attention, value)
