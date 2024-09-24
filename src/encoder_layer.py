@@ -17,11 +17,11 @@ class EncoderLayer(nn.Module):#input_dim and model dim should be equal.test the 
         self.norm2 = LayerNormalization(input_shape)
         self.dropout2 = nn.Dropout(p=drop_out_prob)
 
-    def forward(self, x):
+    def forward(self, x, self_attention_mask):
         # print("--testing inside the model--")
         residual_path = x.clone()
         # print(f'input shape : {x.shape}')
-        x = self.attention(x)
+        x = self.attention(x, mask=self_attention_mask)
         # print(f'shape of x after attention : {x.shape}')
         x = self.dropout1(x)
         # print(f'shape of x after dropout layer : {x.shape}')

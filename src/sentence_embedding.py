@@ -109,11 +109,6 @@ if __name__ == "__main__":
 
 
 
-
-
-
-
-
     def helper_english(x:str):
         for c in x:
             if not c in english_vocabulary:
