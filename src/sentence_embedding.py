@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
-# from ..positional_encoding import PositionalEncoding
+from positional_encoding import PositionalEncoding
+
 
 import pandas as pd
 
@@ -35,12 +36,12 @@ class SentenceEmbedding(nn.Module):
         self.max_sequence_len = max_sequence_len
         self.embedding = nn.Embedding(self.vocab_size, model_dim)
         self.language2idx = language2idx
-        # self.positional_encoding = PositionalEncoding(model_dim, max_sequence_len)
+        self.positional_encoding = PositionalEncoding(model_dim, max_sequence_len)
         self.dropout = nn.Dropout(p=.1)
         self.START_TOKEN = START_TOKEN
         self.END_TOKEN = END_TOKEN
         self.PADDING_TOKEN = PADDING_TOKEN
-        # self.device = torch.device('cuda')
+        self.device = torch.device('cuda')
 
     def batch_tokenize(self, batch, start_token, end_token):
         tokenized = []
@@ -57,8 +58,7 @@ class SentenceEmbedding(nn.Module):
             
 
         tokenized = torch.stack(tokenized) 
-        # return tokenized.to(self.device)
-        return tokenized
+        return tokenized.to(self.device)
 
 
     def forward(self, x, start_token, end_token):
@@ -67,8 +67,8 @@ class SentenceEmbedding(nn.Module):
         if (x >= num_embeddings).any() or (x < 0).any():
             print("Invalid indices found in input:", x)
         x = self.embedding(x)
-        # pos = self.positional_encoding().to(self.device)
-        x = self.dropout(x)
+        pos = self.positional_encoding().to(self.device)
+        x = self.dropout(x + pos)
         return x
 
 
@@ -103,21 +103,6 @@ if __name__ == "__main__":
 
 
 
-    # Check for duplicates in the vocabulary
-    unique_english_vocabulary = list(set(english_vocabulary))
-    if len(unique_english_vocabulary) != len(english_vocabulary):
-        print("Duplicates found in english_vocabulary:")
-        duplicates = [item for item in english_vocabulary if english_vocabulary.count(item) > 1]
-        print(set(duplicates))
-
-    # Remove duplicates from the vocabulary while preserving the order
-    seen = set()
-    unique_english_vocabulary_ordered = [x for x in english_vocabulary if not (x in seen or seen.add(x))]
-
-    # Create the mapping dictionaries
-    english_to_index = {v: k for k, v in enumerate(unique_english_vocabulary_ordered)}
-
-    print(len(unique_english_vocabulary_ordered))  # Should be the same as len(english_to_index)
 
 
 
@@ -128,27 +113,32 @@ if __name__ == "__main__":
 
 
 
-    def helper(x:str):
+
+    def helper_english(x:str):
         for c in x:
             if not c in english_vocabulary:
                 x = x.replace(c, '')
-        return x        
+        return x
 
-    print(len(english_vocabulary))
+    def helper_persian(x:str):
+        for c in x:
+            if not c in persian_vocabulary:
+                x = x.replace(c, '')
+        return x                
+
 
     index_to_persian = {k:v for k,v in enumerate(persian_vocabulary)}
     persian_to_index = {v:k for k,v in enumerate(persian_vocabulary)}
     index_to_english = {k:v for k,v in enumerate(english_vocabulary)}
     english_to_index = {v:k for k,v in enumerate(english_vocabulary)}
-    print(len(english_to_index))
     df = pd.read_csv('././dataset/shortened_dataset.csv')
     df['english'] = df['english'].apply(str.lower)
-    df['english'] = df['english'].apply(helper)
+    df['english'] = df['english'].apply(helper_english)
+    df['persian'] = df['persian'].apply(helper_persian)
     persian_sentences = df['persian'].to_list()
     english_sentences = df['english'].to_list()
-    model = SentenceEmbedding(100, 512, english_to_index, START_TOKEN, END_TOKEN, PADDING_TOKEN)
-    # print(english_sentences)
-    out = model(english_sentences, True, True)
+    model = SentenceEmbedding(100, 512, persian_to_index, START_TOKEN, END_TOKEN, PADDING_TOKEN).to(torch.device('cuda'))
+    out = model(persian_sentences, True, True)
     print(out.shape)
 
 
