@@ -6,12 +6,11 @@ import numpy as np
 
 
 def apply_attention(query, key, value, mask=None):
-    print("hereeeeeeee")
     key_dimmension = query.shape[-1]
     scaled = torch.matmul(query, key.transpose(-2, -1)) / np.sqrt(key_dimmension)
     if mask is not None:
         scaled += mask
-        scaled = scaled.permute(0, 2, 1, 3)
+        # scaled = scaled.permute(0, 2, 1, 3)
         # scaled = scaled.permute(1, 0, 2, 3) + mask + abbas
         # scaled = scaled.permute(0, 2, 1, 3)
 
@@ -40,7 +39,7 @@ class MultiHeadAttention(nn.Module):
         qkv = self.qkv_generator(x)
         # print(f'shape of qkv : {qkv.shape}')
         qkv = qkv.reshape(batch_size, self.n_heads, sequence_len, 3*self.head_dim)
-        qkv = qkv.permute(0, 2, 1, 3)
+        # qkv = qkv.permute(0, 2, 1, 3)
         # print(f'shape of qkv after reshaping: {qkv.shape}')
         q, k, v = qkv.chunk(3, dim=-1)
         # print(f'shape of q : {q.shape}')
@@ -72,7 +71,7 @@ if __name__ == "__main__":
     print("--testing multihead attention class--")
     input_dim = 20
     d_model = 64
-    num_heads = 8
+    num_heads = 4
 
     batch_size = 3
     sequence_length = 5
