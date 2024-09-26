@@ -7,3 +7,4 @@
 /whl_files/
 /dataset/
 models/bert/model.safetensors
+/checkpoint/
