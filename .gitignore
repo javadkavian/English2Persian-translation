@@ -5,6 +5,9 @@
 *.cfg
 /src/__pycache__/
 /whl_files/
-/dataset/
 models/bert/model.safetensors
-/checkpoint/
+/checkpoint/model_and_optimizer.pth
+/dataset/test/
+/dataset/train/
+/dataset/validation/
+/models/
