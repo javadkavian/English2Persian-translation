@@ -3,12 +3,10 @@ In this repository, we are implementing <span style='color:blue;'>`transformer`<
 [<span style='color:yellow;'> Attention is All You Need </span>](https://arxiv.org/abs/1706.03762), `from scratch` using **<span style='color:green;'>pytorch**</span>
 and <span style='color:green;'>**numpy**</span>.At the beggining, I should thank [<span style='color:yellow;'> Ajay Halthor </span>](https://github.com/ajhalthor)
 for his wonderfull toturial on transformer architecture.This implementation is used for translation task from **English** to 
-**Persian**.The dataset used for training the model is extracted from [<span style='color:yellow;'> persiannlp </span>](https://huggingface.co/datasets/persiannlp/parsinlu_translation_en_fa).The road to implement this architecture was to implement the base components of a 
-transformer such as attnetion layers, embedding layers and feedforward layers and eventually assembling all togeather to make
-encoder, decoder and finally the main transformer module.
+**Persian**.The dataset used for training the model is extracted from [<span style='color:yellow;'> persiannlp </span>](https://huggingface.co/datasets/persiannlp/parsinlu_translation_en_fa).The road to implementing this architecture involved developing the base components of a transformer, such as attention layers, embedding layers, and feedforward layers, and eventually assembling them together to create the encoder, decoder, and, finally, the main transformer module.
 
 ## Dataset
-The dataset contains 1.62M rows which was impossible for me to trian it with the limited resources that I had.So extracted a portion of 
+The dataset contains 1.62M rows which was impossible for me to trian it with the limited resources that I had.So I extracted a portion of 
 <span style='color:green;'>**200k**</span> from the dataset which you can see a head of it in the followig table:
 | persian                                | english                           |
 | -------------------------------------- | --------------------------------- |
@@ -19,8 +17,8 @@ The dataset contains 1.62M rows which was impossible for me to trian it with the
 ## Training
 Obviously this model is very large and needs to be trained on very powerfull gpus.To train this model, I used the 
 `google colab` service but as the free usuage of gpu is limited, I had to train the model for only one epoch, store its state in a 
-checkpoint and wait for 24 houurs to access the gpu one more time.Doing so, I trained the model for <span style='color:green;'>**12**</span> epochs, which is defienetly not 
-sufficient but got some results that ensures the model architecture is truely implemented.
+checkpoint and wait for 24 hours to access the gpu one more time.Doing so, I trained the model for <span style='color:green;'>**12**</span> epochs, which is defienetly not 
+sufficient but got some results that ensures the model architecture is correctly implemented.
 
 ## Results
 In this section, we can see some results of the model after being trained on <span style='color:green;'>**200k**</span> samples
@@ -85,5 +83,5 @@ and for <span style='color:green;'>**12**</span> epochs.
 
 
 As you see, when the length of sentence is long, the translator is not operating properly.But you can obviously see the high correlation between the model prediction and the actual persian translation.The reason is the low number of epochs that I could train the model.
-12 epochs is obviously not sufficient for capturing patterns between persian and english language on this very large model.As a further work, we can train the model for more number of epochs, if actually resource is available, so that it can operate well on long sentences.
+12 epochs is obviously not sufficient for capturing patterns between persian and english language on this very large model.As a further work, we can train the model for more number of epochs, if actually resource is available, so that it can operate well on long sentences.You can find the final checkpoint of the model in the repository.
 
